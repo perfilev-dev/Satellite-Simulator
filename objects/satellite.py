@@ -2,8 +2,10 @@
 
 from mongoalchemy.document import Document
 from mongoalchemy.fields import *
-from datetime import datetime
+from datetime import datetime, timedelta
 from math import copysign
+from sgp4.earth_gravity import wgs84
+from sgp4.io import twoline2rv
 
 
 class Satellite(Document):
@@ -74,3 +76,31 @@ class Satellite(Document):
         line2 += str(sum([int(x) for x in list(line2.replace('-','1')) if x.isdigit()]) % 10)
 
         return '\n'.join([title, line1, line2])
+
+    def propagate(self, date_from, date_to, sample=300):
+        '''Предсказывает положение спутника в заданный промежуток времени и с
+        заданной периодичностью
+
+        @param: date_from Дата начала расчета.
+
+        @param: date_to Дата окончания расчета.
+
+        @param: sample Период вычислений в секундах (по умолчанию: 300 сек).
+
+        '''
+
+        assert (date_from >= self.epoch), 'Дата начала расчета произошла раньше эпохи'
+        assert (date_to > date_from), 'Дата окончания произошла раньше даты начала'
+
+        line1, line2 = self.to_tle().split('\n')[1:]
+        satmodel = twoline2rv(line1, line2, wgs84)
+
+        ts_locations = []
+        for sec in range(0, int((date_to-date_from).total_seconds()), sample):
+            ts_locations.append(
+                tuple([sec] +
+                      [1000*x for x in satmodel.propagate(*tuple((
+                          date_from +
+                          timedelta(seconds=sec)).timetuple()[:-3]))[0]]))
+
+        return ts_locations

@@ -3,7 +3,7 @@
 import sys
 import unittest
 
-from os import path
+from os import path, remove
 
 sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 
@@ -40,7 +40,9 @@ class TestDatabse(unittest.TestCase):
 
         self.assertEqual(len(list(session.query(Satellite))), 2)
         for i, sat in enumerate(session.query(Satellite).ascending(Satellite.number)):
-            self.assertTrue(tle[i]==sat.to_tle())
+            self.assertEqual(tle[i], sat.to_tle())
+
+        remove('temp.txt')
 
 
 if __name__ == '__main__':
