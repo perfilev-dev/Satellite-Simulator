@@ -1,16 +1,21 @@
+# -*- coding: utf-8 -*-
+
 import os
 import sys
-
-sys.path.insert(1, os.path.join(os.path.abspath('.'), 'venv/lib/python2.7/site-packages'))
-
+import __builtin__
 
 from flask import Flask
-app = Flask(__name__)
+__builtin__.app = Flask(__name__)
 
 
-@app.route("/")
-def hello():
-    return "Hello World!"
+from methods.satellites import *
+from utils import database as db
+
 
 if __name__ == "__main__":
+
+    # Заполним БД
+    db.drop()
+    db.import_satellites_from_file('/Users/s.perfilev/Downloads/tle-new.txt')
+
     app.run()
