@@ -2,10 +2,13 @@
 
 import sys
 import unittest
+import __builtin__ as shared
 
 from os import path
+from mongoalchemy.session import Session
 
 sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
+shared.session = Session.connect('database')
 
 
 class TestSatellite(unittest.TestCase):

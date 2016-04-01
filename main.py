@@ -2,10 +2,12 @@
 
 import os
 import sys
-import __builtin__
+import __builtin__ as shared
 
 from flask import Flask
-__builtin__.app = Flask(__name__)
+from mongoalchemy.session import Session
+shared.app = Flask(__name__)
+shared.session = Session.connect('database')
 
 
 from methods.satellites import *

@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
+import __builtin__ as shared
+
 from pyorbital import tlefile
-from mongoalchemy.session import Session
 from objects.satellite import Satellite
 
 
@@ -11,8 +12,6 @@ def import_satellites_from_file(path_to_file):
     @param: path_to_file Путь к файлу с tle наборами.
 
     """
-
-    session = Session.connect('database')
 
     with open(path_to_file) as f:
 
@@ -42,11 +41,9 @@ def import_satellites_from_file(path_to_file):
                             version=s.element_number,
                             revolutions=s.orbit)
 
-            session.save(sat)
+            shared.session.save(sat)
 
 def drop():
     """Очищает базу данных."""
 
-    session = Session.connect('database')
-
-    session.clear_collection(Satellite)
+    shared.session.clear_collection(Satellite)
