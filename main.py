@@ -18,6 +18,6 @@ if __name__ == "__main__":
 
     # Заполним БД
     db.drop()
-    db.import_satellites_from_file('/Users/s.perfilev/Downloads/tle-new.txt')
+    db.import_satellites_from_file('./tle-new.txt')
 
     app.run()
