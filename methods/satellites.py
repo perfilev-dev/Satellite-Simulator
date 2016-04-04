@@ -10,6 +10,19 @@ from dateutil import parser
 
 @shared.app.route("/method/satellites.get")
 def satellites_get():
+    """Возвращает список спутников."""
+
+    response = []
+    for sat in list(shared.session.query(Satellite)):
+        response.append({
+            'id': sat.number,
+            'name': sat.name
+            });
+
+    return dumps({'response': response})
+
+@shared.app.route("/method/satellites.getDetail")
+def satellites_getDetail():
     """Возвращает расширенную информацию о спутниках."""
 
     satellite_ids = request.args.get('satellite_ids')
