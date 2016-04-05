@@ -82,5 +82,23 @@ class TestSatellite(unittest.TestCase):
                          ts_locations);
 
 
+class TestError(unittest.TestCase):
+
+    def test_existence(self):
+        from objects.error import Error
+
+    def test_to_str(self):
+        from objects.error import Error
+
+        error = Error(code=100,
+                      message='One of the parameters specified was missing or invalid: %s')
+
+        s = ('{"error": '
+             '{"error_code": 100, '
+               '"error_msg": "One of the parameters specified was missing or invalid: count should be less than 200"}}')
+
+        self.assertEqual(str(error) % 'count should be less than 200', s)
+
+
 if __name__ == '__main__':
     unittest.main()

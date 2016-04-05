@@ -5,6 +5,7 @@ import __builtin__ as shared
 from json import dumps
 from flask import request
 from objects.satellite import Satellite
+from objects.error import Error
 from dateutil import parser
 
 
@@ -12,14 +13,45 @@ from dateutil import parser
 def satellites_get():
     """Возвращает список спутников."""
 
-    response = []
-    for sat in list(shared.session.query(Satellite)):
-        response.append({
+    offset = request.args.get('offset')
+    count = request.args.get('count')
+
+    err_100 = shared.session.query(Error).filter(Error.code == 100).first()
+
+    if not offset is None:
+        try:
+            offset = int(offset)
+            if offset < 0:
+                return str(err_100) % 'offset should be positive'
+        except ValueError:
+            return str(err_100) % 'offset not integer'
+    else:
+        offset = 0
+
+    if not count is None:
+        try:
+            count = int(count)
+            if count > 200:
+                return str(err_100) % 'count should be less than 200'
+            elif count < 0:
+                return str(err_100) % 'count should be positive'
+        except ValueError:
+            return str(err_100) % 'offset not integer'
+    else:
+        count = 200
+
+    response = {
+        'count': shared.session.query(Satellite).count(),
+        'items': []
+    }
+    for sat in list(shared.session.query(Satellite).skip(offset).limit(count)):
+        response['items'].append({
             'id': sat.number,
             'name': sat.name
             });
 
     return dumps({'response': response})
+
 
 @shared.app.route("/method/satellites.getDetail")
 def satellites_getDetail():
@@ -42,6 +74,7 @@ def satellites_getDetail():
                         response[-1][field] = getattr(sat, field)
 
     return dumps({'response': response})
+
 
 @shared.app.route("/method/satellites.getOrbit")
 def satellites_getOrbit():

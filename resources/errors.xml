@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<errors>
+    <error>
+        <code>100</code>
+        <msg>One of the parameters specified was missing or invalid: %s</msg>
+    </error>
+</errors>

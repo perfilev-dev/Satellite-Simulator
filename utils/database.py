@@ -4,6 +4,8 @@ import __builtin__ as shared
 
 from pyorbital import tlefile
 from objects.satellite import Satellite
+from objects.error import Error
+from xml.etree import ElementTree
 
 
 def import_satellites_from_file(path_to_file):
@@ -43,7 +45,24 @@ def import_satellites_from_file(path_to_file):
 
             shared.session.save(sat)
 
+def import_errors_from_xml(path_to_file):
+    """Импортирует коды и тексты ошибок из XML файла.
+
+    @param: path_to_file Путь к XML файлу.
+
+    """
+
+    root = ElementTree.parse(path_to_file).getroot()
+
+    for error in root.findall('error'):
+
+        err = Error(code=int(error.find('code').text),
+                    message=error.find('msg').text)
+
+        shared.session.save(err)
+
 def drop():
     """Очищает базу данных."""
 
     shared.session.clear_collection(Satellite)
+    shared.session.clear_collection(Error)

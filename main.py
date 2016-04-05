@@ -18,6 +18,7 @@ if __name__ == "__main__":
 
     # Заполним БД
     db.drop()
-    db.import_satellites_from_file('./tle-new.txt')
+    db.import_satellites_from_file('./resources/tle-new.txt')
+    db.import_errors_from_xml('./resources/errors.xml')
 
     app.run()
