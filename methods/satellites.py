@@ -60,6 +60,14 @@ def satellites_getDetail():
     satellite_ids = request.args.get('satellite_ids')
     fields = request.args.get('fields')
 
+    err_100 = shared.session.query(Error).filter(Error.code == 100).first()
+    err_113 = shared.session.query(Error).filter(Error.code == 113).first()
+
+    if satellite_ids is None:
+        return str(err_100) % 'satellite_ids is undefined'
+    elif not len([x for x in satellite_ids.split(',') if x.strip().isdigit()]):
+        return str(err_113)
+
     response = []
     for satellite_id in [int(x.strip()) for x in satellite_ids.split(',') if x.strip().isdigit()]:
         sat = shared.session.query(Satellite).filter(Satellite.number==satellite_id).first()
@@ -128,7 +136,7 @@ def satellites_getOrbit():
                         'interpolationAlgorithm': 'LAGRANGE',
                         'interpolationDegree': 7,
                         'referenceFrame': 'INERTIAL',
-                        'cartesian': sat.propagate(date_from, date_to, sample)
+                        'cartesian': sum(sat.propagate(date_from, date_to, sample),[])
                     },
                     'label': {
                         'fillColor': {
