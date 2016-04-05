@@ -141,7 +141,7 @@ def satellites_getOrbit():
                         'interpolationAlgorithm': 'LAGRANGE',
                         'interpolationDegree': 7,
                         'referenceFrame': 'INERTIAL',
-                        'cartesian': sum(sat.propagate(date_from, date_to, sample),[])
+                        'cartesian': sum([list(x) for x in sat.propagate(date_from, date_to, sample)],[])
                     },
                     'label': {
                         'fillColor': {
