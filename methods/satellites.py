@@ -4,6 +4,7 @@ import __builtin__ as shared
 
 from json import dumps
 from flask import request
+from flask import Response
 from objects.satellite import Satellite
 from objects.error import Error
 from dateutil import parser
@@ -50,7 +51,9 @@ def satellites_get():
             'name': sat.name
             });
 
-    return dumps({'response': response})
+    return Response(response=dumps({'response': response}),
+                    status=200,
+                    mimetype="application/json")
 
 
 @shared.app.route("/method/satellites.getDetail")
@@ -81,7 +84,9 @@ def satellites_getDetail():
                     if field in sat.schema_json()['fields'].keys():
                         response[-1][field] = getattr(sat, field)
 
-    return dumps({'response': response})
+    return Response(response=dumps({'response': response}),
+                    status=200,
+                    mimetype="application/json")
 
 
 @shared.app.route("/method/satellites.getOrbit")
@@ -157,6 +162,8 @@ def satellites_getOrbit():
                         'verticalOrigin': 'CENTER'
                     }
                 })
-        return dumps({'response': response})
+        return Response(response=dumps({'response': response}),
+                    status=200,
+                    mimetype="application/json")
     except:
         return '[]'

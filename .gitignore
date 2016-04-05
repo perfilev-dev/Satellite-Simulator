@@ -9,3 +9,5 @@ db/
 pyvenv.cfg
 .venv
 pip-selfcheck.json
+*.pyc
+.DS_Store
