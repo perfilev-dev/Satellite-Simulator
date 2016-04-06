@@ -5,6 +5,10 @@
     <msg>One of the parameters specified was missing or invalid: %s</msg>
   </error>
   <error>
+    <code>101</code>
+    <msg>Some of the parameters are contradictory: %s</msg>
+  </error>
+  <error>
     <code>113</code>
     <msg>Invalid satellite id</msg>
   </error>
