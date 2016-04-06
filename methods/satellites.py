@@ -198,10 +198,10 @@ def satellites_getCZML():
                         },
                         'resolution': 120,
                         'leadTime': [{
-                            'number': 3600
+                            'number': 24 * 60 * 60 / sat.mean_motion
                             }],
                         'trailTime': [{
-                            'number': 3600
+                            'number': 24 * 60 * 60 / sat.mean_motion
                             }]
                     },
                     'position': {
