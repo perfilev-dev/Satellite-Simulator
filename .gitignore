@@ -8,7 +8,7 @@ venv/
 [Ll]ocal
 [Ss]cripts
 pyvenv.cfg
-.venv
+venv
 pip-selfcheck.json
 *.pyc
 .DS_Store
